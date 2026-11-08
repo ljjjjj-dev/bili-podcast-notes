@@ -1,0 +1,4 @@
+# 装进 tools/python 的 Python 包（setup.sh 会自动安装）
+yt-dlp==2026.10.26
+mlx-whisper==0.4.3
+imageio-ffmpeg==0.8.1

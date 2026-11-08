@@ -1,0 +1,15 @@
+# 工具（由 setup.sh 安装，约 2.8 GB）
+tools/
+
+# 个人设置和个人文件
+config/settings.json
+config/profile.md
+config/known_terms.txt
+使用说明.html
+
+# 系统文件
+.DS_Store
+Icon?
+__pycache__/
+*.pyc
+.claude/

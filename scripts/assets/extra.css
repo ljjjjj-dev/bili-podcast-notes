@@ -1,0 +1,58 @@
+
+/* glosses */
+.gl{color:var(--muted);font-size:.88em;font-weight:400}
+
+/* read progress */
+.toc-progress{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);margin:-4px 0 8px 10px}
+.read{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;margin-left:4px;padding:1px 8px;border:1px solid var(--line);border-radius:999px;background:var(--bg)}
+.read input{margin:0;accent-color:var(--rec)}
+.chapter.is-read{opacity:.62}
+.chapter.is-read .read{color:var(--rec-ink);border-color:var(--rec)}
+.chapter.is-read>summary .ch-title{text-decoration:line-through;text-decoration-color:var(--line);text-decoration-thickness:2px}
+.seg.is-read{filter:grayscale(.85) opacity(.45)}
+.toc .toc-ch.is-read{opacity:.5}
+.toc .toc-ch.is-read::after{content:"✓";margin-left:auto;color:var(--rec-ink);font-size:11px}
+.k-read{background:var(--lx);filter:grayscale(.85) opacity(.45);outline:1px dashed var(--muted)}
+.hide-read .chapter.is-read{display:none}
+
+/* fact checks */
+.fc-sum{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.fc-badge{display:inline-block;font-size:12px;font-weight:700;padding:0 8px;border-radius:4px;line-height:1.8;white-space:nowrap}
+.fc-ok{--fc:var(--ok);--fc-bg:var(--ok-bg)}.fc-part{--fc:var(--mid);--fc-bg:var(--mid-bg)}.fc-bad{--fc:var(--strong);--fc-bg:var(--strong-bg)}.fc-unk{--fc:var(--weak);--fc-bg:var(--weak-bg)}
+.fc-badge{color:var(--fc);background:var(--fc-bg)}
+.fc-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.fc{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--fc);border-radius:8px;padding:12px 16px}
+.fc-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.fc-claim{font-weight:700;flex:1;min-width:12em}
+.fc p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.fc-src{margin-top:6px;font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.src{color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.src:hover{text-decoration-color:var(--rec)}
+
+/* personal */
+.pgrid{display:flex;flex-direction:column;gap:14px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+.pcard h3{margin:0 0 4px;font-family:var(--f-display);font-size:18px}
+.p-note{color:var(--muted);font-size:13px;margin:0 0 8px}
+.pcard ul{margin:0;padding-left:1.1em;display:flex;flex-direction:column;gap:8px}
+.preds{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.pred{display:grid;grid-template-columns:9.5em minmax(0,1fr) auto;gap:6px 16px;padding:12px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.pred-due{font-family:var(--f-mono);font-size:12.5px;color:var(--rec-ink);font-weight:600}
+@media (max-width:640px){.pred{grid-template-columns:minmax(0,1fr) auto}.pred-due{grid-column:1/-1}}
+
+/* terms */
+.t-intro{color:var(--muted);margin:0 0 8px}
+.t-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 4px}
+.t-n{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-weight:500}
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:0 28px;margin:0}
+.t-row{display:grid;grid-template-columns:minmax(0,10.5em) minmax(0,1fr) auto;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.t-row dt{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--ink);overflow-wrap:anywhere}
+.t-row dd{margin:0;color:var(--muted);font-size:14px}
+.known-btn{font:inherit;font-size:12px;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:999px;padding:0 10px;cursor:pointer;line-height:1.9}
+.known-btn:hover{color:var(--ink);border-color:var(--muted)}
+.t-row.known dt,.t-row.known dd{opacity:.45}
+.t-row.known .known-btn{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+:root{--ok:#1f6f37;--ok-bg:#e1f1e4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ok:#7fd49a;--ok-bg:#16301f}}
+:root[data-theme="dark"]{--ok:#7fd49a;--ok-bg:#16301f}
