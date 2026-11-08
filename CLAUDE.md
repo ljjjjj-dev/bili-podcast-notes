@@ -12,6 +12,7 @@
   - `home_url`：知识库首页 Artifact 的链接。为空表示还没发布过首页：第一次发布首页后把链接写进来，以后都用这个 url 更新，不要新建。
   - `browser`：从哪个浏览器读取B站登录信息（`edge`、`chrome`、`safari`、`firefox` 等）。
 - `config/known_terms.txt`（不进 git）：用户已认识、不用再注释的英文词，每行一个。
+- 本文件夹是公开的 git 仓库（github.com/ljjjjj-dev/bili-podcast-notes）。个人信息（路径、链接、关注方向、已认识的词）只能放在被 `.gitignore` 排除的文件里，不要写进会提交的文件。提交和推送要先经过用户同意。
 - `使用说明.html`（不进 git）是写给用户本人看的说明书；`README.md` 是公开的说明。流程、功能或文件位置有改动时，两份都要同步更新。
 
 ## 环境
