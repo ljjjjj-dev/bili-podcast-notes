@@ -2,11 +2,11 @@
 
 <h1 align="center">bili-podcast-notes</h1>
 
-<p align="center">把 B站上的长播客、访谈变成详细、可以跳着读的笔记。<br>发一个链接给 Claude，得到一个排版好的网页版笔记和一个可以直接粘贴进 OneNote 的版本。</p>
+<p align="center">把 B站上的长播客、访谈变成详细、可以跳着读的笔记。<br>发一个链接给 Claude，得到一个排版好的网页版笔记和一个可以直接粘贴进 OneNote 的版本。目前只支持 Apple 芯片的 Mac。</p>
 
 ---
 
-## 它能做什么
+## 功能
 
 一期几个小时的访谈，看不完、记不住、英文术语听不懂？把链接发给 Claude，它会：
 
@@ -31,7 +31,7 @@
 | 英文对照 | 英文术语第一次出现时自动加中文注释；已认识的词点一下就不再显示 |
 | 关键概念、金句、自测题 | 帮你消化和复习 |
 
-## 需要什么
+## 运行环境
 
 - **Apple 芯片（M 系列）的 Mac**：本地语音转写用的是 Apple 的 MLX 框架。
 - **[Claude 桌面应用](https://claude.ai/download)**，使用其中的 Code 标签页。需要 Claude 账号，发布网页版用的是 Claude 的 Artifact 功能。
@@ -117,7 +117,7 @@ bili-podcast-notes/
 
 ## 声明
 
-- 本项目只是一个**个人学习用**的笔记工具。字幕、音频和视频内容的版权属于 B站和原作者。请只用于自己学习，不要传播下载的音视频，也不要把生成的笔记用于商业用途，并遵守 B站用户协议。
+- 本项目只是一个**个人学习用**的笔记工具，和 B站没有关联。字幕、音频和视频内容的版权属于 B站和原作者。请只用于自己学习，不要传播下载的音视频，也不要把生成的笔记用于商业用途，并遵守 B站用户协议。
 - 笔记内容由 AI 生成，可能有错误；“和你有关”一节里与投资相关的内容只是观察，**不构成投资建议**。
 - 用到的第三方工具各自遵循它们的许可证：[yt-dlp](https://github.com/yt-dlp/yt-dlp)、[mlx-whisper](https://github.com/ml-explore/mlx-examples)、[Whisper](https://github.com/openai/whisper)、[python-build-standalone](https://github.com/astral-sh/python-build-standalone)、[FFmpeg](https://ffmpeg.org)（通过 imageio-ffmpeg）。
 
