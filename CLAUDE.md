@@ -2,18 +2,19 @@
 
 用户发来一个B站链接（网址、BV号、av号或 App 分享文字都行），就按下面的流程生成一期笔记：一个发布成 Artifact 的网页版，和一个可以粘贴进 OneNote 的版本。
 
-**开始前先读 `config/profile.md`**，里面是用户的阅读习惯、英文水平和关心的方向。“和你有关”一节按里面列的方向写。没有这个文件就按 `config/profile.example.md` 的默认情况来，并提醒用户可以复制一份改成自己的。
+**开始前先读 `local/profile.md`**，里面是用户的阅读习惯、英文水平和关心的方向。“和你有关”一节按里面列的方向写。没有这个文件就按 `config/profile.example.md` 的默认情况来，并提醒用户可以复制一份改成自己的。
 
 ## 位置
 
-- 本文件夹：`scripts/` 放脚本，`tools/` 放所有工具（由 `setup.sh` 安装，不进 git），`config/` 放设置。
-- `config/settings.json`（个人设置，不进 git；模板是 `settings.example.json`）：
+- 本文件夹：`scripts/` 放脚本，`tools/` 放所有工具（由 `setup.sh` 安装，不进 git），`config/` 放示例模板，`local/` 放用户的个人文件。
+- `local/` 不进主仓库，它自己是一个单独的 git 仓库，用来备份个人文件（用户的私有仓库 github.com/ljjjjj-dev/bili-podcast-notes-local）。改了 `local/` 里的文件后，经用户同意在 `local/` 里提交并推送。
+- `local/settings.json`（个人设置；模板是 `config/settings.example.json`）：
   - `output_dir`：笔记输出文件夹，每期一个子文件夹 `<发布日期> <短标题>/`，根目录有 `首页.html`。
   - `home_url`：知识库首页 Artifact 的链接。为空表示还没发布过首页：第一次发布首页后把链接写进来，以后都用这个 url 更新，不要新建。
   - `browser`：从哪个浏览器读取B站登录信息（`edge`、`chrome`、`safari`、`firefox` 等）。
-- `config/known_terms.txt`（不进 git）：用户已认识、不用再注释的英文词，每行一个。
-- 本文件夹是公开的 git 仓库（github.com/ljjjjj-dev/bili-podcast-notes）。个人信息（路径、链接、关注方向、已认识的词）只能放在被 `.gitignore` 排除的文件里，不要写进会提交的文件。提交和推送要先经过用户同意。
-- `使用说明.html`（不进 git）是写给用户本人看的说明书；`README.md` 是公开的说明。流程、功能或文件位置有改动时，两份都要同步更新。
+- `local/profile.md`：用户的阅读习惯和关注方向。`local/known_terms.txt`：用户已认识、不用再注释的英文词，每行一个。
+- 本文件夹是公开的 git 仓库（github.com/ljjjjj-dev/bili-podcast-notes）。个人信息（路径、链接、关注方向、已认识的词）只能放在 `local/` 里，不要写进主仓库会提交的文件。提交和推送要先经过用户同意。
+- `local/使用说明.html` 是写给用户本人看的说明书；`README.md` 是公开的说明。流程、功能或文件位置有改动时，两份都要同步更新。
 
 ## 环境
 
@@ -40,7 +41,7 @@ B站不登录会返回 412，所以 `fetch.py` 用 `--cookies-from-browser <sett
 9. **放进剪贴板**：`python3 scripts/clip.py <剧集文件夹>`，告诉用户在 OneNote 新页面里按 Cmd+V。
 10. **回复用户**：给出网页版链接和首页链接，用几句话说明这期讲了什么，以及事实核查里有没有值得注意的地方。
 
-如果用户发来一串"已认识"的英文词（网页英文对照表里的"复制已认识的词"按钮生成的），就把这些词追加到 `config/known_terms.txt`，每行一个。以后的笔记不再给这些词加中文注释。
+如果用户发来一串"已认识"的英文词（网页英文对照表里的"复制已认识的词"按钮生成的），就把这些词追加到 `local/known_terms.txt`，每行一个。以后的笔记不再给这些词加中文注释。
 
 ## episode.json 格式
 

@@ -12,9 +12,9 @@ import sys, os, re, json, subprocess, shutil, tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-SETTINGS = os.path.join(ROOT, "config", "settings.json")
+SETTINGS = os.path.join(ROOT, "local", "settings.json")
 if not os.path.exists(SETTINGS):
-    sys.exit("缺少 config/settings.json：请复制 config/settings.example.json 为 settings.json 并填好输出文件夹和浏览器。")
+    sys.exit("缺少 local/settings.json：请运行 ./setup.sh，或把 config/settings.example.json 复制到 local/settings.json 并填好输出文件夹和浏览器。")
 CFG = json.load(open(SETTINGS, encoding="utf-8"))
 OUT = os.environ.get("PODCAST_OUT") or CFG["output_dir"]  # 测试时可用环境变量换输出位置
 BROWSER = CFG.get("browser", "chrome")  # 从这个浏览器读取B站登录信息

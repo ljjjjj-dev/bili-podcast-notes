@@ -62,8 +62,9 @@ else
   HF_HOME="$TOOLS/models/huggingface" "$PY" -c "from huggingface_hub import snapshot_download as d; print(d('$MODEL'))"
 fi
 
-# 个人设置
-[ -f "$ROOT/config/settings.json" ] || { cp "$ROOT/config/settings.example.json" "$ROOT/config/settings.json"; echo "已创建 config/settings.json，请打开改成你自己的输出文件夹和浏览器。"; }
-[ -f "$ROOT/config/profile.md" ] || { cp "$ROOT/config/profile.example.md" "$ROOT/config/profile.md"; echo "已创建 config/profile.md，可以按自己的情况修改。"; }
+# 个人文件都放在 local/（不进主仓库，可以单独备份到你自己的私有仓库）
+mkdir -p "$ROOT/local"
+[ -f "$ROOT/local/settings.json" ] || { cp "$ROOT/config/settings.example.json" "$ROOT/local/settings.json"; echo "已创建 local/settings.json，请打开改成你自己的输出文件夹和浏览器。"; }
+[ -f "$ROOT/local/profile.md" ] || { cp "$ROOT/config/profile.example.md" "$ROOT/local/profile.md"; echo "已创建 local/profile.md，可以按自己的情况修改。"; }
 
 say "安装完成。接下来在 Claude 桌面应用的 Code 标签页里，用这个文件夹开一个会话，把B站链接发给 Claude 即可。"

@@ -1,11 +1,8 @@
 # 工具（由 setup.sh 安装，约 2.8 GB）
 tools/
 
-# 个人设置和个人文件
-config/settings.json
-config/profile.md
-config/known_terms.txt
-使用说明.html
+# 个人文件（设置、个人情况、已认识的词、个人说明书）都在 local/
+local/
 
 # 系统文件
 .DS_Store

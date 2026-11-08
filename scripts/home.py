@@ -1,6 +1,6 @@
 """生成知识库首页：汇总输出文件夹里所有剧集。
 
-用法: python3 home.py [输出文件夹]（不写就用 config/settings.json 里的 output_dir）
+用法: python3 home.py [输出文件夹]（不写就用 local/settings.json 里的 output_dir）
      读取每个子文件夹里的 episode.json，生成 <输出文件夹>/首页.html
 """
 import sys, os, re, json, html
@@ -9,7 +9,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 if len(sys.argv) > 1:
     out_dir = sys.argv[1]
 else:
-    out_dir = json.load(open(os.path.join(os.path.dirname(HERE), "config", "settings.json"), encoding="utf-8"))["output_dir"]
+    out_dir = json.load(open(os.path.join(os.path.dirname(HERE), "local", "settings.json"), encoding="utf-8"))["output_dir"]
 e = html.escape
 
 eps = []

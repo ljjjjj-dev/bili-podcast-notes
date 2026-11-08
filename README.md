@@ -26,7 +26,7 @@
 | 时间线 | 分章节的详细要点，可以勾选“已读”、只看未读 |
 | 核心观点 | 结论、论证、逻辑强弱、嘉宾立场（比如他在哪家公司工作） |
 | 事实核查 | 嘉宾说的事实对照公开信息 |
-| 和你有关 | 按你在 `config/profile.md` 里写的关注方向，整理相关观察，并追踪嘉宾的预测 |
+| 和你有关 | 按你在 `local/profile.md` 里写的关注方向，整理相关观察，并追踪嘉宾的预测 |
 | 观点速览 | 按公司 / 行业整理，可以按依据强弱筛选 |
 | 英文对照 | 英文术语第一次出现时自动加中文注释；已认识的词点一下就不再显示 |
 | 关键概念、金句、自测题 | 帮你消化和复习 |
@@ -55,12 +55,12 @@ cd bili-podcast-notes && ./setup.sh
 1. 下载[独立版 Python 3.13](https://github.com/astral-sh/python-build-standalone)，并用官方 SHA256 校验；
 2. 安装 yt-dlp、mlx-whisper、ffmpeg（约 1.3 GB）；
 3. 下载 Whisper 语音模型 `mlx-community/whisper-large-v3-turbo`（约 1.5 GB）。如果只打算用 B站字幕，可以加 `--no-model` 先跳过，以后需要时再运行一次 `./setup.sh`。
-4. 创建你的个人设置文件。
+4. 在 `local/` 里创建你的个人设置文件。`local/` 不会进这个仓库，如果想备份，可以在里面另外 `git init` 并推送到你自己的私有仓库。
 
 然后打开这两个文件，改成你自己的情况：
 
-- `config/settings.json`：`output_dir` 是笔记存放的文件夹；`browser` 是你登录 B站用的浏览器（`chrome`、`edge`、`safari`、`firefox`）；`home_url` 先留空，第一次生成首页后 Claude 会自动填上。
-- `config/profile.md`：你的阅读习惯、英文水平和关心的方向。Claude 写“和你有关”一节时会按这里写的来。
+- `local/settings.json`：`output_dir` 是笔记存放的文件夹；`browser` 是你登录 B站用的浏览器（`chrome`、`edge`、`safari`、`firefox`）；`home_url` 先留空，第一次生成首页后 Claude 会自动填上。
+- `local/profile.md`：你的阅读习惯、英文水平和关心的方向。Claude 写“和你有关”一节时会按这里写的来。
 
 ## 使用
 
@@ -104,12 +104,13 @@ bili-podcast-notes/
 │   ├── settings.example.json   个人设置模板
 │   └── profile.example.md      个人情况模板
 ├── icon/                  图标
+├── local/                 你的个人文件，不在仓库里（可以另建私有仓库备份）
 └── tools/                 由 setup.sh 安装，不在仓库里
 ```
 
 ## 常见问题
 
-- **提示 412 / B站拒绝了请求**：在 `config/settings.json` 里写的那个浏览器中登录 B站，再试一次。第一次读取登录信息时，macOS 可能会弹窗请求访问钥匙串，点“允许”。
+- **提示 412 / B站拒绝了请求**：在 `local/settings.json` 里写的那个浏览器中登录 B站，再试一次。第一次读取登录信息时，macOS 可能会弹窗请求访问钥匙串，点“允许”。
 - **B站改版后取不到字幕**：更新 yt-dlp，运行 `tools/python/bin/python -m pip install -U yt-dlp`。
 - **转写结果是重复的话或乱码**：语音识别遇到纯音乐会乱识别。播客、访谈这类以说话为主的内容不会这样。
 - **想挪动文件夹**：可以直接挪，工具用的都是相对路径。

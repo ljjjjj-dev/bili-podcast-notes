@@ -11,7 +11,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 ep_dir = sys.argv[1]
 ep = json.load(open(os.path.join(ep_dir, "episode.json"), encoding="utf-8"))
-_kt = os.path.join(ROOT, "config", "known_terms.txt")  # 已认识、不再注释的英文词，每行一个（可以没有这个文件）
+_kt = os.path.join(ROOT, "local", "known_terms.txt")  # 已认识、不再注释的英文词，每行一个（可以没有这个文件）
 known = [l for l in open(_kt, encoding="utf-8").read().splitlines() if l.strip() and not l.startswith("#")] if os.path.exists(_kt) else []
 
 BV, URL = ep["bv"], ep["url"]
