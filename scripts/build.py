@@ -148,7 +148,7 @@ filters = (f'<div class="filters"><div class="fgroup"><span class="flabel">类�
 section("entities", "观点速览", "按公司 / 行业", filters + f'<div class="ent-grid">{cards}</div>')
 
 # 关键概念
-dl = "".join(f'<div class="g-row"><dt>{rich(a)}</dt><dd>{rich(b)}</dd></div>' for a, b in ep["glossary"])
+dl = "".join(f'<div class="g-row"><dt>{rich(item[0])}</dt><dd>{rich(item[1])}</dd></div>' for item in ep.get("glossary", []))
 section("glossary", "关键概念", "听不懂的词在这里", f'<dl class="gloss">{dl}</dl>')
 
 TERMS_MARK = "<!--TERMS-->"

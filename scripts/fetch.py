@@ -61,8 +61,27 @@ title = info.get("title", "")
 date = info.get("upload_date") or ""
 date = f"{date[:4]}-{date[4:6]}-{date[6:]}" if len(date) == 8 else "未知日期"
 bv = info.get("id", "").split("_")[0]
+p_idx = info.get("playlist_index") if info.get("n_entries", 1) > 1 else None
+ep_url = "https://www.bilibili.com/video/" + bv + (f"?p={p_idx}" if p_idx else "")
 short = re.sub(r'[\\/:*?"<>|]', "", re.split(r"[：:|｜！!？?]", title)[0])[:20].strip() or bv
-ep_dir = os.path.join(OUT, f"{date} {short}")
+ep_dir = None
+if os.path.isdir(OUT):
+    for name in sorted(os.listdir(OUT)):
+        cand = os.path.join(OUT, name)
+        for fn in ("episode.json", "info.json"):
+            fp = os.path.join(cand, fn)
+            if os.path.isfile(fp):
+                try:
+                    d = json.load(open(fp, encoding="utf-8"))
+                    if d.get("url") == ep_url or (not p_idx and d.get("bv") == bv and "?p=" not in d.get("url", "")):
+                        ep_dir = cand
+                        break
+                except Exception:
+                    pass
+        if ep_dir:
+            break
+if ep_dir is None:
+    ep_dir = os.path.join(OUT, f"{date} {short}")
 os.makedirs(ep_dir, exist_ok=True)
 
 subs = info.get("subtitles") or {}
@@ -70,7 +89,7 @@ langs = [k for k in subs if k != "danmaku"]
 human = [k for k in langs if not k.startswith("ai-") and k.startswith("zh")]
 ai = [k for k in langs if k.startswith("ai-zh")]
 meta = {
-    "bv": bv, "url": "https://www.bilibili.com/video/" + bv + (f"?p={info['playlist_index']}" if info.get("playlist_index") and info.get("n_entries", 1) > 1 else ""),
+    "bv": bv, "url": ep_url,
     "title": title, "uploader": info.get("uploader"), "duration": info.get("duration_string"),
     "duration_seconds": info.get("duration"), "published": date, "description": (info.get("description") or "")[:1500],
     "chapters": [{"start": int(c["start_time"]), "title": c["title"]} for c in (info.get("chapters") or [])],
