@@ -67,4 +67,4 @@ mkdir -p "$ROOT/local"
 [ -f "$ROOT/local/settings.json" ] || { cp "$ROOT/config/settings.example.json" "$ROOT/local/settings.json"; echo "已创建 local/settings.json，请打开改成你自己的输出文件夹和浏览器。"; }
 [ -f "$ROOT/local/profile.md" ] || { cp "$ROOT/config/profile.example.md" "$ROOT/local/profile.md"; echo "已创建 local/profile.md，可以按自己的情况修改。"; }
 
-say "安装完成。接下来在 Claude 桌面应用的 Code 标签页里，用这个文件夹开一个会话，把B站链接发给 Claude 即可。"
+say "安装完成。接下来在 Antigravity 中直接发送 B站链接或 BV号即可。"

@@ -79,7 +79,7 @@
   document.getElementById('known-copy').onclick=()=>{
     if(!known.size){kst.textContent='还没有标记认识的词';return;}
     const text='把这些词加到已认识列表：\n'+[...known].sort().join('\n');
-    copyText(text,()=>kst.textContent='已复制，发给 Claude 就能在以后的笔记里跳过这些词',()=>kst.textContent='浏览器拒绝了复制');
+    copyText(text,()=>kst.textContent='已复制，发给 Antigravity 就能在以后的笔记里跳过这些词',()=>kst.textContent='浏览器拒绝了复制');
   };
   paintKnown();
 
@@ -94,7 +94,7 @@
     const sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
     let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
     sel.removeAllRanges(); sink.remove();
-    say(ok?'已复制。在 OneNote 新页面里按 Cmd+V 粘贴。':'浏览器拒绝了复制，请让 Claude 把内容直接放进剪贴板。',ok);
+    say(ok?'已复制。在 OneNote 新页面里按 Cmd+V 粘贴。':'浏览器拒绝了复制，请让 Antigravity 把内容直接放进剪贴板。',ok);
   }
   document.getElementById('copy-onenote').addEventListener('click',()=>{
     const htmlStr=tpl.innerHTML, text=tpl.content.textContent;

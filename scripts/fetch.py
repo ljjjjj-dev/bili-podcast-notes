@@ -6,7 +6,7 @@
 结果: 在输出文件夹里建 "<发布日期> <标题前 20 字>/"，里面有
       info.json      视频信息
       subtitles.srt  字幕（每句带时间）
-      transcript.txt 给 Claude 读的文字稿：每 30 秒一段，段首是时间
+      transcript.txt 给 Antigravity 读的文字稿：每 30 秒一段，段首是时间
 """
 import sys, os, re, json, subprocess, shutil, tempfile
 
@@ -115,7 +115,7 @@ open({srt_path!r}, 'w', encoding='utf-8').write('\\n'.join(out))
 meta["source"] = source
 json.dump(meta, open(os.path.join(ep_dir, "info.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
-# ---- 给 Claude 读的文字稿：每 30 秒一段 ----
+# ---- 给 Antigravity 读的文字稿：每 30 秒一段 ----
 cues = []
 for block in open(srt_path, encoding="utf-8").read().strip().split("\n\n"):
     lines = block.strip().split("\n")

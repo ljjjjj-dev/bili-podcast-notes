@@ -1,4 +1,4 @@
-# 关于我（Claude 写笔记时参考）
+# 关于我（Antigravity 写笔记时参考）
 
 复制本文件为 `local/profile.md` 并按自己的情况修改。
 
