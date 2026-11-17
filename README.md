@@ -119,6 +119,11 @@ bili-podcast-notes/
 - 笔记内容由 AI 生成，可能有错误；“和你有关”一节里与投资相关的内容只是观察，**不构成投资建议**。
 - 用到的第三方工具各自遵循它们的许可证：[yt-dlp](https://github.com/yt-dlp/yt-dlp)、[mlx-whisper](https://github.com/ml-explore/mlx-examples)、[Whisper](https://github.com/openai/whisper)、[python-build-standalone](https://github.com/astral-sh/python-build-standalone)、[FFmpeg](https://ffmpeg.org)（通过 imageio-ffmpeg）。
 
+## 维护与致谢
+
+- 初始架构与核心脚本由 **Claude Code** 协助构建。
+- 2026-11-18 起由 **Antigravity** 接手适配与维护（新增本地网页版回退跳转、Antigravity 全局技能流与使用文档）。
+
 ## 许可证
 
 [MIT](LICENSE)
