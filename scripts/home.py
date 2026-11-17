@@ -4,6 +4,7 @@
      读取每个子文件夹里的 episode.json，生成 <输出文件夹>/首页.html
 """
 import sys, os, re, json, html
+from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 if len(sys.argv) > 1:
@@ -18,6 +19,8 @@ for name in sorted(os.listdir(out_dir)):
     if os.path.isfile(p):
         ep = json.load(open(p, encoding="utf-8"))
         ep["_folder"] = name
+        if os.path.isfile(os.path.join(out_dir, name, "网页版.html")):
+            ep["_local_note"] = f"{quote(name)}/{quote('网页版.html')}"
         eps.append(ep)
 eps.sort(key=lambda x: x.get("published", ""), reverse=True)
 
@@ -33,8 +36,11 @@ def strip(s):
 def tc(ep, t):
     return f'<a class="tc" href="{ep["url"]}?t={secs(t)}" target="_blank" rel="noopener">{t}</a>'
 
+def note_url(ep):
+    return ep.get("artifact_url") or ep.get("_local_note")
+
 def link(ep):
-    return ep.get("artifact_url") or ep["url"]
+    return note_url(ep) or ep["url"]
 
 # ---- episode cards ----
 all_tags = []
@@ -50,7 +56,8 @@ for ep in eps:
     fc = ep.get("factchecks", [])
     fc_ok = sum(1 for f in fc if f["status"] == "confirmed")
     tags = "".join(f'<span class="tag">{e(t)}</span>' for t in ep.get("tags", []))
-    note_link = (f'<a class="btn btn-primary" href="{e(ep["artifact_url"])}" target="_blank" rel="noopener">打开笔记</a>' if ep.get("artifact_url")
+    u = note_url(ep)
+    note_link = (f'<a class="btn btn-primary" href="{e(u)}" target="_blank" rel="noopener">打开笔记</a>' if u
                  else '<span class="muted">笔记还没发布</span>')
     cards += f"""<article class="ep" data-tags="{e('|'.join(ep.get('tags', [])))}" data-hay="{e(hay)}">
       <div class="ep-meta"><span class="rec">{e(ep.get("show", ""))}</span><span>{ep.get("published", "")}</span><span>{ep["duration"]}</span></div>
