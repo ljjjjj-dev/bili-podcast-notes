@@ -318,6 +318,7 @@ page = f"""<title>{e(ep["short_title"])}</title>
       <h1>{e(ep["title"])}</h1>
       {guest}
       <div class="actions">
+        <a class="btn" href="../首页.html">← 知识库首页</a>
         <a class="btn" href="{URL}" target="_blank" rel="noopener">在B站打开</a>
         <button type="button" class="btn btn-primary" id="copy-onenote">复制到 OneNote</button>
         <span class="copy-status" id="copy-status" role="status" aria-live="polite">时间戳都能点，会跳到B站对应那句话</span>

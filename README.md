@@ -91,7 +91,8 @@ bili-podcast-notes/
 ├── setup.sh               一次性安装所有工具
 ├── requirements.txt       Python 包版本
 ├── scripts/
-│   ├── fetch.py           取视频信息和字幕 / 本地转写
+│   ├── fetch.py           取视频信息和字幕 / 本地转写（长视频自动分块）
+│   ├── validate.py        校验 episode.json 结构、时间线与覆盖密度
 │   ├── align.py           时间戳对齐
 │   ├── build.py           生成网页版和 OneNote 版
 │   ├── home.py            生成知识库首页

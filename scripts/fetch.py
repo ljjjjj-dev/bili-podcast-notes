@@ -153,5 +153,15 @@ if buf:
     out.append(f"[{fmt(cur)}] " + "，".join(buf))
 open(os.path.join(ep_dir, "transcript.txt"), "w", encoding="utf-8").write("\n".join(out))
 
+chunks_dir = os.path.join(ep_dir, "chunks")
+n_chunks = 0
+if len(out) > 80:
+    os.makedirs(chunks_dir, exist_ok=True)
+    for idx in range(0, len(out), 80):
+        n_chunks += 1
+        part = out[idx:idx + 80]
+        open(os.path.join(chunks_dir, f"chunk_{n_chunks:02d}.txt"), "w", encoding="utf-8").write("\n".join(part))
+
 print(json.dumps({"folder": ep_dir, "title": title, "duration": meta["duration"], "source": source,
-                  "chars": sum(len(x) for x in out), "chapters_from_uploader": len(meta["chapters"])}, ensure_ascii=False, indent=1))
+                  "chars": sum(len(x) for x in out), "chapters_from_uploader": len(meta["chapters"]),
+                  "chunks": n_chunks}, ensure_ascii=False, indent=1))
