@@ -3,12 +3,12 @@
 用法: python3 fetch.py "<链接 / BV号 / av号 / App 分享文字>" [--whisper]
      --whisper  不用B站字幕，强制用本地 Whisper 重新转写（更准，但要多等几分钟）
 
-结果: 在输出文件夹里建 "<发布日期> <标题前 20 字>/"，里面有
-      info.json      视频信息
+结果: 在输出文件夹里建 "<生成日期> <标题前 20 字>/"，里面有
+      info.json      视频信息（含真实发布日期）
       subtitles.srt  字幕（每句带时间）
       transcript.txt 给 Antigravity 读的文字稿：每 30 秒一段，段首是时间
 """
-import sys, os, re, json, subprocess, shutil, tempfile
+import sys, os, re, json, subprocess, shutil, tempfile, datetime
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -81,7 +81,8 @@ if os.path.isdir(OUT):
         if ep_dir:
             break
 if ep_dir is None:
-    ep_dir = os.path.join(OUT, f"{date} {short}")
+    today = datetime.date.today().isoformat()
+    ep_dir = os.path.join(OUT, f"{today} {short}")
 os.makedirs(ep_dir, exist_ok=True)
 
 subs = info.get("subtitles") or {}
