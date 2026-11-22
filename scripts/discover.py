@@ -59,7 +59,7 @@ results = []
 if bvs:
     urls = [f"https://www.bilibili.com/video/{bv}" for bv in bvs]
     r = subprocess.run(
-        [PY, "-m", "yt_dlp", "--cookies-from-browser", BROWSER, "--skip-download", "--no-warnings",
+        [PY, "-m", "yt_dlp", "--cookies-from-browser", BROWSER, "--skip-download", "--no-playlist", "--no-warnings",
          "--print", "%(id)s\t%(upload_date)s\t%(duration)s\t%(duration_string)s\t%(uploader)s\t%(title)s", *urls],
         capture_output=True, text=True, env=ENV,
     )

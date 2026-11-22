@@ -2,6 +2,31 @@
   {
     "uid": "280780745",
     "name": "张小珺商业访谈录",
-    "category": "AI科技"
+    "category": "AI科技/中文深度访谈"
+  },
+  {
+    "uid": "508452265",
+    "name": "硅谷101",
+    "category": "AI科技/硅谷深度播客"
+  },
+  {
+    "uid": "351754674",
+    "name": "Web3天空之城",
+    "category": "AI科技/外网精校中字搬运"
+  },
+  {
+    "uid": "163682133",
+    "name": "opus精译",
+    "category": "AI科技/Dwarkesh与Lex中字精译"
+  },
+  {
+    "uid": "90864734",
+    "name": "看理想vistopia",
+    "category": "哲学/人文深度对谈"
+  },
+  {
+    "uid": "4357864",
+    "name": "羲北偏北",
+    "category": "哲学/思想家深度长访谈"
   }
 ]
