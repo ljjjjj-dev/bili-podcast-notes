@@ -116,7 +116,7 @@ if source is None:
     audio = os.path.join(tmp, "a.m4a")
     code = f"""
 import mlx_whisper, sys
-r = mlx_whisper.transcribe({audio!r}, path_or_hf_repo={WHISPER_MODEL!r}, language='zh', initial_prompt='以下是普通话的句子，包含一些英文专业术语。')
+r = mlx_whisper.transcribe({audio!r}, path_or_hf_repo={WHISPER_MODEL!r})
 def f(t):
     h=int(t//3600); m=int(t%3600//60); s=t%60
     return f"{{h:02d}}:{{m:02d}}:{{s:06.3f}}".replace('.', ',')
