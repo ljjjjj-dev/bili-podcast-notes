@@ -26,12 +26,9 @@ for i, a in enumerate(sys.argv[1:]):
     elif a == "--min-mins" and i + 2 < len(sys.argv):
         min_mins = int(sys.argv[i + 2])
 
-# 收集已精读或已在 INDEX.md 出现过的 BV 号
+# 只排除用户已经点过并完成精读（存在 episode.json）的 BV 号
 seen = set()
 if os.path.isdir(OUT):
-    idx_file = os.path.join(OUT, "INDEX.md")
-    if os.path.isfile(idx_file):
-        seen.update(re.findall(r"BV[0-9A-Za-z]+", open(idx_file, encoding="utf-8").read()))
     for name in os.listdir(OUT):
         ep_f = os.path.join(OUT, name, "episode.json")
         if os.path.isfile(ep_f):
