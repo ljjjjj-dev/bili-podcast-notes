@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Check Python syntax
+        run: python -m py_compile scripts/*.py
+
+      - name: Check Node.js / frontend syntax
+        run: |
+          node --check web/server.mjs
+          node --check web/public/app.js
+
+      - name: Validate example JSON configs
+        run: |
+          python -c '
+          import glob, json
+          for p in sorted(glob.glob("config/*.json")):
+              with open(p, encoding="utf-8") as f:
+                  json.load(f)
+              print(f"OK: {p}")
+          '

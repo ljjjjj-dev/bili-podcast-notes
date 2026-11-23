@@ -1,8 +1,31 @@
-<p align="center"><img src="icon/icon.png" width="120" alt=""></p>
+<p align="center">
+  <img src="icon/icon.png" width="120" alt="bili-podcast-notes icon">
+</p>
 
 <h1 align="center">bili-podcast-notes</h1>
 
-<p align="center">把 B站上的长播客、访谈变成详细、可以跳着读的笔记。<br>发一个链接给 Antigravity，得到一个排版好的网页版笔记和一个可以直接粘贴进 OneNote 的版本。目前只支持 Apple 芯片的 Mac。</p>
+<p align="center">
+  把 B站长播客、深度访谈变成详细、可跳着读的结构化笔记与个人知识库。<br>
+  发一个链接给 <strong>Antigravity</strong>（或 Claude Code），自动完成字幕获取 / 本地 MLX Whisper 转写、事实核查、时间戳对齐，并生成排版精美的网页版笔记、OneNote 版与本地 Web 控制台。
+</p>
+
+<p align="center">
+  <a href="https://github.com/ljjjjj-dev/bili-podcast-notes/actions/workflows/ci.yml"><img src="https://github.com/ljjjjj-dev/bili-podcast-notes/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/macOS-Apple%20Silicon-black?logo=apple" alt="Apple Silicon macOS">
+  <img src="https://img.shields.io/badge/Whisper-MLX%20Local-orange" alt="MLX Whisper">
+  <img src="https://img.shields.io/badge/Web%20Console-Zero--Dep%20Node.js-339933?logo=nodedotjs&logoColor=white" alt="Zero-Dep Node.js">
+</p>
+
+<p align="center">
+  <a href="#功能">功能</a> •
+  <a href="#安装">安装</a> •
+  <a href="#使用">使用</a> •
+  <a href="#本地-web-控制台">Web 控制台</a> •
+  <a href="#工作原理">工作原理</a> •
+  <a href="#目录结构">目录结构</a> •
+  <a href="#常见问题">常见问题</a>
+</p>
 
 ---
 
@@ -10,132 +33,151 @@
 
 一期几个小时的访谈，看不完、记不住、英文术语听不懂？把链接发给 Antigravity，它会：
 
-1. **取文字稿**：优先用 UP主上传的字幕，其次用 B站 AI 字幕；都没有就下载音频，用本地的 Whisper 模型转写（全程在你的 Mac 上运行，不上传音频）。
+1. **智能取文字稿**：优先使用 UP 主上传的字幕，其次用 B 站 AI 字幕；都没有则下载音频，在你的 Mac 上用本地 **MLX Whisper** 自动识别语言并分块转写（全程离线，不上传音频）。
 2. **通读全文写笔记**：按章节、每 1–3 分钟一个要点，详细到基本可以代替看视频。
-3. **把时间戳对准到原句**：每个要点都能点一下跳回视频里那句话的开头。
-4. **事实核查**：联网核实嘉宾说的事实（收购、人事变动、数据……），标出属实、部分属实、不符或无法核实，并附上来源。
-5. **生成两个版本**：网页版生成在本地输出目录（直接用浏览器打开即可阅读），OneNote 版放进剪贴板。
-6. **汇总成知识库**：首页汇总所有期，可以搜索，自动对照不同嘉宾对同一家公司的看法，并追踪嘉宾做过的预测。
+3. **时间戳精准对齐**：通过锚点句自动把每个要点的时间戳对准到字幕原句开头，点击直接跳回 B 站对应位置。
+4. **联网事实核查**：核实嘉宾提到的收购、人事变动、数据等事实，标注「属实 / 部分属实 / 不符 / 无法核实」并附来源。
+5. **双格式输出**：生成交互式本地网页版笔记，并将带格式的 OneNote 版自动写入剪贴板。
+6. **个人知识库 & UP 主发现**：自动汇总所有已读期次，支持跨期搜索、同一公司多嘉宾观点对照、预测追踪，以及从订阅 UP 主自动扫描最新长播客候选。
 
 ### 每期笔记包含
 
-| 部分 | 内容 |
+| 模块 | 内容 |
 |---|---|
-| 精华主题 | 几个问题读懂这期 |
-| 跳着看指南 | 哪些片段必看、推荐、选看、可跳过，附一条按章节着色的“时码尺” |
-| 时间线 | 分章节的详细要点，可以勾选“已读”、只看未读 |
-| 核心观点 | 结论、论证、逻辑强弱、嘉宾立场（比如他在哪家公司工作） |
-| 事实核查 | 嘉宾说的事实对照公开信息 |
-| 和你有关 | 按你在 `local/profile.md` 里写的关注方向，整理相关观察，并追踪嘉宾的预测 |
-| 观点速览 | 按公司 / 行业整理，可以按依据强弱筛选 |
-| 英文对照 | 英文术语第一次出现时自动加中文注释；已认识的词点一下就不再显示 |
-| 关键概念、金句、自测题 | 帮你消化和复习 |
+| 精华主题 | 几个核心问题快速读懂全期 |
+| 跳着看指南 | 标注「必看 / 推荐 / 选看 / 可跳过」片段，附按章节着色的可交互“时码尺” |
+| 时间线 | 分章节详细要点，支持勾选“已读”与“只看未读” |
+| 核心观点 | 结论、论证链条、逻辑强弱与嘉宾立场（利益相关性） |
+| 事实核查 | 对照公开信息验证嘉宾陈述，附参考来源 |
+| 和你有关 | 结合 `local/profile.md` 中的个人关注方向提炼观察，并追踪嘉宾预测 |
+| 观点速览 | 按公司 / 行业聚合，支持按依据强弱筛选 |
+| 英文对照 | 英文术语首次出现自动加中文注释；已掌握的词点击一次即可永久隐藏 |
+| 关键概念、金句、自测题 | 辅助消化、复盘与记忆巩固 |
 
 ## 运行环境
 
-- **Apple 芯片（M 系列）的 Mac**：本地语音转写用的是 Apple 的 MLX 框架。
-- **Antigravity**（已配置 `bili-podcast-notes` 技能，也兼容 Claude Code）。
-- **一个登录了 B站的浏览器**（Chrome、Edge、Safari、Firefox 都可以）。不登录时 B站会拒绝请求，工具会在本机读取这个浏览器里的 B站登录状态，不会发送到别处。
-- 大约 **3 GB** 磁盘空间，用来放工具和语音模型。
+- **Apple 芯片（M 系列）Mac**：本地语音转写基于 Apple MLX 框架（`mlx-whisper`）。
+- **Antigravity**（配置 `bili-podcast-notes` 全局技能，亦兼容 Claude Code）。
+- **已登录 B 站的浏览器**（Chrome / Edge / Safari / Firefox 均可）：仅在本机读取 Cookie 以避免 B 站限流，不会上传至任何第三方。
+- **Node.js 18+**（仅在使用可选的本地 Web 控制台时需要）。
+- 约 **3 GB** 磁盘空间，用于存放独立 Python 环境、ffmpeg 与 Whisper 模型。
 
-不需要另外安装 Python、Homebrew 或 ffmpeg，`setup.sh` 会把所有工具都装进本文件夹的 `tools/` 里。
+> [!TIP]
+> 无需提前安装 Python、Homebrew 或 ffmpeg，`setup.sh` 会将全部依赖隔离安装在本项目的 `tools/` 目录中。
 
 ## 安装
 
 ```bash
 git clone https://github.com/ljjjjj-dev/bili-podcast-notes.git
+cd bili-podcast-notes
+./setup.sh
 ```
 
-```bash
-cd bili-podcast-notes && ./setup.sh
-```
+`setup.sh` 会自动完成：
 
-`setup.sh` 会：
+1. 下载[独立版 Python 3.13](https://github.com/astral-sh/python-build-standalone) 并校验官方 SHA256；
+2. 安装 `yt-dlp`、`mlx-whisper`、`imageio-ffmpeg`（约 1.3 GB）；
+3. 下载语音模型 `mlx-community/whisper-large-v3-turbo`（约 1.5 GB；若暂只需 B 站字幕，可加 `--no-model` 跳过，后续随时重跑 `./setup.sh` 补装）；
+4. 在 `local/` 目录初始化个人配置模板（`local/` 已加入 `.gitignore`，不会提交到公开仓库；如需备份，可在 `local/` 内单独 `git init` 并推送到私有仓库）。
 
-1. 下载[独立版 Python 3.13](https://github.com/astral-sh/python-build-standalone)，并用官方 SHA256 校验；
-2. 安装 yt-dlp、mlx-whisper、ffmpeg（约 1.3 GB）；
-3. 下载 Whisper 语音模型 `mlx-community/whisper-large-v3-turbo`（约 1.5 GB）。如果只打算用 B站字幕，可以加 `--no-model` 先跳过，以后需要时再运行一次 `./setup.sh`。
-4. 在 `local/` 里创建你的个人设置文件。`local/` 不会进这个仓库，如果想备份，可以在里面另外 `git init` 并推送到你自己的私有仓库。
+完成后按需编辑 `local/` 下的个人配置：
 
-然后打开这两个文件，改成你自己的情况：
-
-- `local/settings.json`：`output_dir` 是笔记存放的文件夹；`browser` 是你登录 B站用的浏览器（`chrome`、`edge`、`safari`、`firefox`）；`home_url` 可留空（本地 `首页.html` 会自动链接到各期 `网页版.html`）。
-- `local/profile.md`：你的阅读习惯、英文水平和关心的方向。Antigravity 写“和你有关”一节时会按这里写的来。
+- `local/settings.json`：
+  - `output_dir`：笔记输出目录（支持绝对路径，也支持相对于项目根目录的相对路径，例如 `"data"`）；
+  - `browser`：登录 B 站的浏览器（`chrome` / `edge` / `safari` / `firefox`）；
+  - `home_url`：可留空（本地 `首页.html` 会自动链接到各期 `网页版.html`）；
+  - `tools_dir`（可选）：如果将 `tools/` 放在外部共享目录，可在此指定路径。
+- `local/profile.md`：填写你的背景、阅读偏好、英文水平和关注领域，AI 生成“和你有关”一节时会据此定制。
+- `local/channels.json`（可选，参考 `config/channels.example.json`）：配置你订阅的 B 站 UP 主列表，供 `scripts/discover.py` 和 Web 控制台自动扫描最新长播客。
 
 ## 使用
 
-1. 打开 Antigravity（在任意工作区均可，已安装全局技能）。
-2. 发 B站链接，比如“帮我总结 BV1xxxxxxx”。完整网址、BV 号、av 号、App 分享出来的整段文字都可以；多P视频说一下第几P。
-3. 完成后 Antigravity 会给你本地 `网页版.html` 和 `首页.html` 的链接，并把 OneNote 版放进剪贴板，在 OneNote 新页面里按 `Cmd + V` 即可。
+1. 打开 **Antigravity**（任意工作区均可）。
+2. 发送 B 站链接，例如：`帮我总结 BV1xxxxxxx`。支持完整网址、BV 号、av 号、App 分享文案；多 P 视频说明第几 P 即可。
+3. 生成完成后，直接点击返回的 `网页版.html` 或 `首页.html` 阅读；同时 OneNote 版已自动写入剪贴板，在 OneNote 新页面按 `Cmd + V` 即可粘贴。
 
-很重要的一期，可以说“用 Whisper 重新转写”，通常比 B站 AI 字幕更准。
+> [!NOTE]
+> 遇到特别重要或 B 站 AI 字幕质量较差的视频，可以直接说「用 Whisper 重新转写」，本地模型通常准确率更高，且自动支持中英文识别。
 
-### 本地 Web 控制台（可选，零依赖）
+## 本地 Web 控制台
 
-如果需要可视化浏览精读库、跨期观点对照、实时扫描订阅 UP 主并在线管理配置，可直接运行：
+内置零依赖 Node.js 控制台，提供一站式可视化体验：
 
 ```bash
 node web/server.mjs
 ```
 
-随后在浏览器打开 `http://127.0.0.1:3457`（支持亮/暗模式切换、内置每日精选 Markdown 阅读器与一键复制 OneNote）。
+启动后访问 `http://127.0.0.1:3457`（可通过环境变量 `PORT=xxxx` 自定义端口），支持：
+
+- **精读库与每日精选**：浏览所有已生成笔记，内置 Markdown 阅读器，一键复制 OneNote 格式；
+- **跨期观点与预测追踪**：聚合不同嘉宾对同一家公司 / 行业的判断；
+- **订阅 UP 主扫描**：在线调用 `discover.py` 拉取最新长视频候选并筛选；
+- **配置管理 & 亮/暗主题切换**：可视化编辑订阅频道与基础设置。
 
 ## 工作原理
 
-流程规范写在 [`CLAUDE.md`](CLAUDE.md)（Antigravity 通过全局 `bili-podcast-notes` Skill 自动调用）。脚本只负责机械的部分，阅读理解和写作由 Antigravity 完成。
+完整流程规范定义在 [`CLAUDE.md`](CLAUDE.md) 中：脚本负责确定性的工程环节，阅读理解、深度提炼与事实核查交由 AI Agent 完成。
 
-```
-链接 ─▶ fetch.py      取视频信息和字幕，没有字幕就下载音频本地转写
-     ─▶ Antigravity   通读文字稿，写 episode.json（结构化笔记），联网事实核查
-     ─▶ align.py      用每个要点的“锚点句”把时间戳对准到字幕原句
-     ─▶ build.py      生成网页版和 OneNote 版，自动给英文术语加中文注释
-     ─▶ home.py       汇总所有期，生成知识库首页（支持本地网页版直接跳转）
-     ─▶ clip.py       把 OneNote 版放进剪贴板
+```mermaid
+flowchart LR
+    A[B站链接 / UP主扫描] --> B[fetch.py<br/>字幕提取 / 本地 MLX Whisper 分块转写]
+    B --> C[Antigravity / Claude<br/>通读全文 · 联网核查 · 生成 episode.json]
+    C --> D[validate.py<br/>结构与时间线覆盖校验]
+    D --> E[align.py<br/>锚点句时间戳对齐]
+    E --> F[build.py<br/>生成网页版 + OneNote 版 + 术语注释]
+    F --> G[home.py / web/server.mjs<br/>更新知识库首页 & Web 控制台]
+    F --> H[clip.py<br/>写入 macOS 富文本剪贴板]
 ```
 
-## 文件夹结构
+## 目录结构
 
-```
+```text
 bili-podcast-notes/
-├── CLAUDE.md              流程规范：步骤、数据格式、写作要求
-├── setup.sh               一次性安装所有工具
-├── requirements.txt       Python 包版本
+├── CLAUDE.md                    流程规范：步骤、JSON Schema 与写作要求
+├── setup.sh                     一键隔离安装 Python / yt-dlp / MLX Whisper
+├── requirements.txt             Python 依赖锁定
 ├── scripts/
-│   ├── discover.py        从订阅 UP 主自动拉取最新长播客候选
-│   ├── fetch.py           取视频信息和字幕 / 本地转写（长视频自动分块）
-│   ├── validate.py        校验 episode.json 结构、时间线与覆盖密度
-│   ├── align.py           时间戳对齐
-│   ├── build.py           生成网页版和 OneNote 版
-│   ├── home.py            生成知识库首页
-│   ├── clip.py            放进 macOS 剪贴板（带格式）
-│   ├── glossary.py        英文术语中文对照表（可以继续补充）
-│   └── assets/            网页样式和交互
-├── web/                   零依赖 Node.js 本地控制台（server.mjs + public/）
+│   ├── discover.py              从订阅 UP 主自动拉取最新长播客候选
+│   ├── fetch.py                 取视频信息与字幕 / 本地长音频分块转写
+│   ├── validate.py              校验 episode.json 结构、时间线与覆盖密度
+│   ├── align.py                 锚点句时间戳精准对齐
+│   ├── build.py                 生成网页版与 OneNote 版，自动加术语注释
+│   ├── home.py                  汇总所有期次，生成知识库首页
+│   ├── clip.py                  写入 macOS 富文本剪贴板
+│   ├── glossary.py              英文术语中文对照表（持续扩充）
+│   └── assets/                  网页版样式与交互脚本
+├── web/
+│   ├── server.mjs               零依赖 Node.js 本地服务
+│   └── public/                  Web 控制台前端静态资源
 ├── config/
-│   ├── settings.example.json   个人设置模板
-│   └── profile.example.md      个人情况模板
-├── icon/                  图标
-├── local/                 你的个人文件，不在仓库里（可以另建私有仓库备份）
-└── tools/                 由 setup.sh 安装，不在仓库里
+│   ├── settings.example.json    基础设置模板
+│   ├── profile.example.md       个人背景与关注方向模板
+│   └── channels.example.json    订阅 UP 主列表模板
+├── icon/                        项目图标（PNG / SVG）
+├── local/                       个人配置与私有数据（已 gitignore）
+└── tools/                       独立运行时与模型（由 setup.sh 安装，已 gitignore）
 ```
 
 ## 常见问题
 
-- **提示 412 / B站拒绝了请求**：在 `local/settings.json` 里写的那个浏览器中登录 B站，再试一次。第一次读取登录信息时，macOS 可能会弹窗请求访问钥匙串，点“允许”。
-- **B站改版后取不到字幕**：更新 yt-dlp，运行 `tools/python/bin/python -m pip install -U yt-dlp`。
-- **转写结果是重复的话或乱码**：语音识别遇到纯音乐会乱识别。播客、访谈这类以说话为主的内容不会这样。
-- **想挪动文件夹**：可以直接挪，工具用的都是相对路径。
+- **提示 412 / B 站拒绝请求**：在 `local/settings.json` 指定的浏览器中重新登录 B 站后再试。首次读取 Cookie 时 macOS 会请求访问钥匙串，点击「允许」即可。
+- **B 站改版导致取不到字幕**：升级内置 `yt-dlp`：
+  ```bash
+  tools/python/bin/python -m pip install -U yt-dlp
+  ```
+- **转写出现重复片段或乱码**：Whisper 遇到纯背景音乐时可能产生幻觉，语音为主的播客与访谈通常不受影响。
+- **移动项目文件夹**：脚本与 Web 控制台均支持相对路径与外部 `tools_dir`，直接移动目录即可，无需重装。
 
 ## 声明
 
-- 本项目只是一个**个人学习用**的笔记工具，和 B站没有关联。字幕、音频和视频内容的版权属于 B站和原作者。请只用于自己学习，不要传播下载的音视频，也不要把生成的笔记用于商业用途，并遵守 B站用户协议。
-- 笔记内容由 AI 生成，可能有错误；“和你有关”一节里与投资相关的内容只是观察，**不构成投资建议**。
-- 用到的第三方工具各自遵循它们的许可证：[yt-dlp](https://github.com/yt-dlp/yt-dlp)、[mlx-whisper](https://github.com/ml-explore/mlx-examples)、[Whisper](https://github.com/openai/whisper)、[python-build-standalone](https://github.com/astral-sh/python-build-standalone)、[FFmpeg](https://ffmpeg.org)（通过 imageio-ffmpeg）。
+- 本项目仅用于**个人学习与研究**，与哔哩哔哩（Bilibili）无任何关联。视频、音频及字幕版权归原平台与创作者所有，请勿传播下载的媒体文件或将生成内容用于商业用途，并遵守平台用户协议。
+- 笔记与核查结果由 AI 生成，可能存在误差；“和你有关”中涉及行业或公司的观察仅作信息整理，**不构成任何投资建议**。
+- 第三方组件各自遵循其开源协议：[yt-dlp](https://github.com/yt-dlp/yt-dlp)、[mlx-whisper](https://github.com/ml-explore/mlx-examples)、[Whisper](https://github.com/openai/whisper)、[python-build-standalone](https://github.com/astral-sh/python-build-standalone)、[FFmpeg](https://ffmpeg.org)（通过 `imageio-ffmpeg`）。
 
 ## 维护与致谢
 
 - 初始架构与核心脚本由 **Claude Code** 协助构建。
-- 2026-11-18 起由 **Antigravity** 接手适配与维护（新增本地网页版回退跳转、Antigravity 全局技能流与使用文档）。
+- 2026-11-18 起由 **Antigravity** 接手维护与迭代，陆续新增：本地网页版直链与回退跳转、`validate.py` 质量校验、`discover.py` UP 主自动发现、长视频分块转写与多语言自动检测、零依赖 Web 控制台以及相对路径 / 外置 `tools_dir` 支持。
 
 ## 许可证
 
