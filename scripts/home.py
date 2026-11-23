@@ -7,10 +7,12 @@ import sys, os, re, json, html
 from urllib.parse import quote
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.path.dirname(HERE)
 if len(sys.argv) > 1:
     out_dir = sys.argv[1]
 else:
-    out_dir = json.load(open(os.path.join(os.path.dirname(HERE), "local", "settings.json"), encoding="utf-8"))["output_dir"]
+    raw_out = json.load(open(os.path.join(ROOT, "local", "settings.json"), encoding="utf-8"))["output_dir"]
+    out_dir = raw_out if os.path.isabs(raw_out) else os.path.join(ROOT, raw_out)
 e = html.escape
 
 eps = []

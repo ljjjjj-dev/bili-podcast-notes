@@ -6,12 +6,14 @@ import sys, os, re, json, subprocess
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
-TOOLS = os.path.join(ROOT, "tools")
+cfg = json.load(open(os.path.join(ROOT, "local", "settings.json"), encoding="utf-8"))
+_tdir = cfg.get("tools_dir") or os.path.join(ROOT, "tools")
+TOOLS = _tdir if os.path.isdir(_tdir) else os.path.join(ROOT, "tools")
 PY = os.path.join(TOOLS, "python", "bin", "python")
 ENV = {**os.environ, "PATH": os.path.join(TOOLS, "bin") + os.pathsep + os.environ.get("PATH", "")}
 
-cfg = json.load(open(os.path.join(ROOT, "local", "settings.json"), encoding="utf-8"))
-OUT = cfg["output_dir"]
+raw_out = cfg["output_dir"]
+OUT = raw_out if os.path.isabs(raw_out) else os.path.join(ROOT, raw_out)
 BROWSER = cfg.get("browser", "edge")
 ch_path = os.path.join(ROOT, "local", "channels.json")
 if not os.path.isfile(ch_path):

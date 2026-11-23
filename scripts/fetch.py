@@ -16,11 +16,13 @@ SETTINGS = os.path.join(ROOT, "local", "settings.json")
 if not os.path.exists(SETTINGS):
     sys.exit("缺少 local/settings.json：请运行 ./setup.sh，或把 config/settings.example.json 复制到 local/settings.json 并填好输出文件夹和浏览器。")
 CFG = json.load(open(SETTINGS, encoding="utf-8"))
-OUT = os.environ.get("PODCAST_OUT") or CFG["output_dir"]  # 测试时可用环境变量换输出位置
+raw_out = os.environ.get("PODCAST_OUT") or CFG["output_dir"]  # 测试时可用环境变量换输出位置
+OUT = raw_out if os.path.isabs(raw_out) else os.path.join(ROOT, raw_out)
 BROWSER = CFG.get("browser", "chrome")  # 从这个浏览器读取B站登录信息
 COOKIES = ["--cookies-from-browser", BROWSER]
-# 所有工具都在本文件夹的 tools/ 里：Python 环境（含 yt-dlp、mlx-whisper）、ffmpeg、语音模型
-TOOLS = os.path.join(ROOT, "tools")
+# 工具目录优先读取 settings.json 中的 tools_dir，缺省回退到本地 tools/
+_tdir = CFG.get("tools_dir") or os.path.join(ROOT, "tools")
+TOOLS = _tdir if os.path.isdir(_tdir) else os.path.join(ROOT, "tools")
 PY = os.path.join(TOOLS, "python", "bin", "python")
 ENV = dict(os.environ,
            PATH=os.path.join(TOOLS, "bin") + os.pathsep + os.environ.get("PATH", ""),

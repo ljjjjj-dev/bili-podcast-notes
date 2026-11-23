@@ -70,6 +70,16 @@ cd bili-podcast-notes && ./setup.sh
 
 很重要的一期，可以说“用 Whisper 重新转写”，通常比 B站 AI 字幕更准。
 
+### 本地 Web 控制台（可选，零依赖）
+
+如果需要可视化浏览精读库、跨期观点对照、实时扫描订阅 UP 主并在线管理配置，可直接运行：
+
+```bash
+node web/server.mjs
+```
+
+随后在浏览器打开 `http://127.0.0.1:3457`（支持亮/暗模式切换、内置每日精选 Markdown 阅读器与一键复制 OneNote）。
+
 ## 工作原理
 
 流程规范写在 [`CLAUDE.md`](CLAUDE.md)（Antigravity 通过全局 `bili-podcast-notes` Skill 自动调用）。脚本只负责机械的部分，阅读理解和写作由 Antigravity 完成。
@@ -91,6 +101,7 @@ bili-podcast-notes/
 ├── setup.sh               一次性安装所有工具
 ├── requirements.txt       Python 包版本
 ├── scripts/
+│   ├── discover.py        从订阅 UP 主自动拉取最新长播客候选
 │   ├── fetch.py           取视频信息和字幕 / 本地转写（长视频自动分块）
 │   ├── validate.py        校验 episode.json 结构、时间线与覆盖密度
 │   ├── align.py           时间戳对齐
@@ -99,6 +110,7 @@ bili-podcast-notes/
 │   ├── clip.py            放进 macOS 剪贴板（带格式）
 │   ├── glossary.py        英文术语中文对照表（可以继续补充）
 │   └── assets/            网页样式和交互
+├── web/                   零依赖 Node.js 本地控制台（server.mjs + public/）
 ├── config/
 │   ├── settings.example.json   个人设置模板
 │   └── profile.example.md      个人情况模板
