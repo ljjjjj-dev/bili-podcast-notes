@@ -50,8 +50,9 @@ for i, c in enumerate(ep["chapters"]):
     chapters.append(dict(i=i, num=num, label=label, start=c["start"], end=c["end"], beats=c["beats"], rank=rank, lname=lname))
 
 W = []
-def section(id_, title, eyebrow, inner):
-    W.append(f'<section id="{id_}" class="sec"><header class="sec-head"><span class="eyebrow">{eyebrow}</span><h2>{e(title)}</h2></header>{inner}</section>')
+def section(id_, title, subtitle, inner):
+    sub = f'<p class="sec-sub">{subtitle}</p>' if subtitle else ''
+    W.append(f'<section id="{id_}" class="sec"><header class="sec-head"><h2>{e(title)}</h2>{sub}</header>{inner}</section>')
 
 # 精华主题
 cards = "".join(f'<article class="qa"><h3>{rich(x["q"])}</h3><p>{rich(x["a"])}</p><div class="qa-foot">{tc(x["t"])}</div></article>' for x in ep["themes"])
@@ -73,15 +74,21 @@ for c in chapters:
         pts = "".join(f"<li>{rich(x)}</li>" for x in b["points"])
         rows += f'<li class="beat"><div class="beat-t">{tc(b["t"])}</div><div class="beat-b"><h4>{e(b["title"])}</h4><ul>{pts}</ul></div></li>'
     chip = f'<span class="chip chip-{c["rank"] if c["rank"] is not None else "x"}">{c["lname"]}</span>'
-    chs += (f'<details class="chapter" id="ch-{c["i"]+1}" data-ch="{c["i"]}" open><summary>'
-            f'<span class="ch-num">{c["num"]}</span><span class="ch-title">{e(c["label"])}</span>'
+    is_open = " open" if c["i"] == 0 else ""
+    chs += (f'<details class="chapter" id="ch-{c["i"]+1}" data-ch="{c["i"]}"{is_open}><summary>'
+            f'<span class="ch-num">{c["num"]}</span><h3 class="ch-title">{e(c["label"])}</h3>'
             f'<span class="ch-meta">{tc(c["start"])}<span class="dash">–</span>{tc(c["end"])}{chip}<span class="ch-count">{len(c["beats"])} 段</span>'
             f'<label class="read"><input type="checkbox" id="read-{c["i"]}" data-ch="{c["i"]}"><span>已读</span></label></span>'
+            f'<span class="ch-chev" aria-hidden="true"></span>'
             f'</summary><ol class="beats">{rows}</ol></details>')
-tools = ('<div class="tl-tools"><button type="button" id="tl-open" class="btn-ghost">全部展开</button>'
+tools = ('<div class="tl-tools">'
+         '<div class="tl-btns"><button type="button" id="tl-open" class="btn-ghost">全部展开</button>'
          '<button type="button" id="tl-close" class="btn-ghost">全部收起</button>'
-         '<button type="button" id="tl-unread" class="btn-ghost">只看未读</button></div>')
-section("timeline", "时间线", f'{len(chapters)} 章 · {sum(len(c["beats"]) for c in chapters)} 段 · 时间戳对准到原句', tools + chs)
+         '<button type="button" id="tl-unread" class="btn-ghost" aria-pressed="false">只看未读</button></div>'
+         '<div class="tl-search"><input type="search" id="page-search" placeholder="搜索时间线要点（快捷键 /）" aria-label="搜索时间线要点">'
+         '<span id="search-count" class="search-count" aria-live="polite"></span></div></div>')
+tl_empty = '<div class="empty-state" id="tl-empty" hidden><p id="tl-empty-msg">没有匹配的章节或要点。</p><button type="button" class="btn-ghost" id="tl-reset">显示全部章节</button></div>'
+section("timeline", "时间线", f'{len(chapters)} 章 · {sum(len(c["beats"]) for c in chapters)} 段 · 默认展开首章，点击标题或标尺可随时展开', tools + chs + tl_empty)
 
 # 核心观点
 core = ep["core"]
@@ -139,13 +146,14 @@ for x in ep["entities"]:
     cards += (f'<article class="ent" data-type="{x["type"]}" data-lvl="{x["lvl"]}"><header><h3>{e(x["name"])}</h3>'
               f'<span class="tag">{x["type"]}</span><span class="lvl lvl-{LV[x["lvl"]]}">{x["lvl"]}</span></header>'
               f'<div class="ent-att">{e(x["attitude"])}</div><p>{rich(x["text"])}</p><div class="ent-t">{ts_}</div></article>')
-chips_t = "".join(f'<button type="button" class="fchip" data-f="type" data-v="{t}">{t}</button>' for t in types)
-chips_l = "".join(f'<button type="button" class="fchip" data-f="lvl" data-v="{l}">{l}</button>' for l in "强中弱")
-filters = (f'<div class="filters"><div class="fgroup"><span class="flabel">类型</span><button type="button" class="fchip on" data-f="type" data-v="">全部</button>{chips_t}</div>'
-           f'<div class="fgroup"><span class="flabel">依据</span><button type="button" class="fchip on" data-f="lvl" data-v="">全部</button>{chips_l}</div>'
+chips_t = "".join(f'<button type="button" class="fchip" data-f="type" data-v="{t}" aria-pressed="false">{t}</button>' for t in types)
+chips_l = "".join(f'<button type="button" class="fchip" data-f="lvl" data-v="{l}" aria-pressed="false">{l}</button>' for l in "强中弱")
+filters = (f'<div class="filters"><div class="fgroup"><span class="flabel">类型</span><button type="button" class="fchip on" data-f="type" data-v="" aria-pressed="true">全部</button>{chips_t}</div>'
+           f'<div class="fgroup"><span class="flabel">依据</span><button type="button" class="fchip on" data-f="lvl" data-v="" aria-pressed="true">全部</button>{chips_l}</div>'
            '<span class="fcount" id="fcount"></span></div>'
            '<p class="legend"><span class="lvl lvl-strong">强</span> 亲身经历或内部视角　<span class="lvl lvl-mid">中</span> 行业观察　<span class="lvl lvl-weak">弱</span> 嘉宾自称猜测或了解不多</p>')
-section("entities", "观点速览", "按公司 / 行业", filters + f'<div class="ent-grid">{cards}</div>')
+ent_empty = '<div class="empty-state" id="ent-empty" hidden><p>当前筛选条件下没有匹配的观点。</p><button type="button" class="btn-ghost" id="ent-reset">重置筛选</button></div>'
+section("entities", "观点速览", "按公司 / 行业", filters + f'<div class="ent-grid">{cards}</div>' + ent_empty)
 
 # 关键概念
 dl = "".join(f'<div class="g-row"><dt>{rich(item[0])}</dt><dd>{rich(item[1])}</dd></div>' for item in ep.get("glossary", []))
@@ -173,30 +181,34 @@ for cat, rows in glossary.term_groups(used, known):
         f'<div class="t-row" data-terms="{e("|".join(t.lower() for t in r["terms"]))}"><dt lang="en">{e(" / ".join(r["terms"]))}</dt>'
         f'<dd>{e(r["gloss"])}</dd><button type="button" class="known-btn" aria-pressed="false">认识</button></div>' for r in rows)
     groups += f'<div class="t-group"><h3 class="sub">{cat}<span class="t-n">{len(rows)}</span></h3><dl class="terms">{rr}</dl></div>'
-terms_sec = (f'<section id="terms" class="sec"><header class="sec-head"><span class="eyebrow">对话里出现的英文</span><h2>英文对照</h2></header>'
-             '<p class="t-intro">正文里英文词第一次出现时，后面的灰色括号就是中文意思。已经认识的词点“认识”，全页就不再显示它的中文注释。</p>'
-             '<div class="t-tools"><span id="known-count" class="t-n"></span><button type="button" class="btn-ghost" id="known-copy">复制已认识的词</button>'
+terms_sec = (f'<section id="terms" class="sec"><header class="sec-head"><h2>英文对照</h2><p class="sec-sub">正文里英文词首次出现时附带中文释义；点击正文括号或下方按钮标为「认识」即可全页隐藏。</p></header>'
+             '<div class="t-tools"><span id="known-count" class="t-n"></span><button type="button" class="btn-ghost" id="known-copy">复制已认识列表</button>'
              '<button type="button" class="btn-ghost" id="known-reset">全部恢复</button><span id="known-status" class="t-n" role="status" aria-live="polite"></span></div>'
              f'{groups}</section>')
 body = body.replace(TERMS_MARK, terms_sec)
 
-TOC = [("themes", "精华主题"), ("skim", "跳着看"), ("timeline", "时间线"), ("core", "核心观点")]
-if fcs: TOC.append(("checks", "事实核查"))
-if per or preds: TOC.append(("personal", "和你有关"))
-TOC += [("extend", "引申思考"), ("entities", "观点速览"), ("glossary", "关键概念"), ("terms", "英文对照"), ("quotes", "金句"), ("quiz", "自测题")]
+TOC_GROUPS = [
+    ("速览", [("themes", "精华主题"), ("skim", "跳着看")]),
+    ("精读", [("timeline", "时间线")]),
+    ("分析", [("core", "核心观点")] + ([("checks", "事实核查")] if fcs else []) + ([("personal", "和你有关")] if (per or preds) else []) + [("extend", "引申思考")]),
+    ("资料", [("entities", "观点速览"), ("glossary", "关键概念"), ("terms", "英文对照"), ("quotes", "金句"), ("quiz", "自测题")]),
+]
 toc = ""
-for sid, t in TOC:
-    toc += f'<a href="#{sid}" data-sec="{sid}">{t}</a>'
-    if sid == "timeline":
-        toc += '<div class="chs">' + "".join(
-            f'<a href="#ch-{c["i"]+1}" class="toc-ch" data-ch="{c["i"]}"><span>{c["num"]}</span>{e(re.split("[：，]", c["label"])[0])}</a>' for c in chapters) + "</div>"
+for gname, items in TOC_GROUPS:
+    toc += f'<span class="toc-group-label">{gname}</span>'
+    for sid, t in items:
+        toc += f'<a href="#{sid}" data-sec="{sid}">{t}</a>'
+        if sid == "timeline":
+            toc += '<div class="chs">' + "".join(
+                f'<a href="#ch-{c["i"]+1}" class="toc-ch" data-ch="{c["i"]}"><span>{c["num"]}</span>{e(re.split("[：，]", c["label"])[0])}</a>' for c in chapters) + "</div>"
 
 ruler = ""
 for k, c in enumerate(chapters):
     s0 = secs(c["start"]) if k else 0
     s1 = secs(chapters[k + 1]["start"]) if k + 1 < len(chapters) else TOTAL
     r = "x" if c["rank"] is None else c["rank"]
-    ruler += f'<a class="seg seg-{r}" data-ch="{c["i"]}" style="width:{(s1-s0)/TOTAL*100:.3f}%" href="#ch-{k+1}" title="{e(c["num"]+"、"+c["label"])}（{c["start"]}–{c["end"]}）"><span>{c["num"]}</span></a>'
+    label_full = f'{c["num"]}、{c["label"]}（{c["lname"]}，{c["start"]}–{c["end"]}）'
+    ruler += f'<a class="seg seg-{r}" data-ch="{c["i"]}" style="width:{(s1-s0)/TOTAL*100:.3f}%" href="#ch-{k+1}" title="{e(label_full)}" aria-label="{e(label_full)}"><span>{c["num"]}</span></a>'
 ticks = "".join(f'<span class="tick" style="left:{h*3600/TOTAL*100:.3f}%">{h}:00</span>' for h in range(TOTAL // 3600 + 1))
 keys = '<span><i style="background:var(--l3)"></i>必看</span><span><i style="background:var(--l2)"></i>推荐</span><span><i style="background:var(--l1)"></i>选看</span><span><i style="background:var(--lx)"></i>可跳过 / 未分级</span><span><i class="k-read"></i>已读</span>'
 
@@ -277,7 +289,7 @@ otable(["对象", "类型", "态度", "依据", "时间", "要点"],
        [[f"<b>{e(x['name'])}</b>", x["type"], e(x["attitude"]), OLV[x["lvl"]], "、".join(ots(t) for t in x["times"]), orich(x["text"])] for x in ep["entities"]],
        ["13%", "7%", "10%", "6%", "14%", "50%"])
 oh2("关键概念")
-otable(["概念", "解释"], [[orich(a), orich(b)] for a, b in ep["glossary"]], ["22%", "78%"])
+otable(["概念", "解释"], [[orich(item[0]), orich(item[1])] for item in ep.get("glossary", [])], ["22%", "78%"])
 O.append(TERMS_MARK)
 oh2("金句")
 otable(["金句", "位置"], [[f'“{orich(x["q"])}”', ots(x["t"])] for x in ep["quotes"]], ["88%", "12%"])
@@ -304,37 +316,59 @@ open(os.path.join(ep_dir, "OneNote版.html"), "w", encoding="utf-8").write(
 # ======================================================================
 css = open(os.path.join(HERE, "assets", "page.css"), encoding="utf-8").read() + open(os.path.join(HERE, "assets", "extra.css"), encoding="utf-8").read()
 js = open(os.path.join(HERE, "assets", "page.js"), encoding="utf-8").read().replace("__BV__", BV)
-page = f"""<title>{e(ep["short_title"])}</title>
+page = f"""<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{e(ep["short_title"])}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Noto+Serif+SC:wght@700;900&display=swap">
 <style>{css}</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">跳到正文</a>
 <div class="shell">
   <nav class="toc" aria-label="目录"><span class="toc-label">目录</span><span class="toc-progress" id="toc-progress"></span>{toc}</nav>
-  <main>
+  <main id="main-content">
     <header class="hero">
-      <div class="meta"><span class="rec">{e(ep["show"])}</span><span>{BV}</span><span>{ep["duration"]}</span><span>{ep["published"]}</span></div>
+      <div class="meta"><span class="rec">{e(ep["show"])}</span><span>{ep["duration"]}</span><span>{ep["published"]}</span></div>
       <h1>{e(ep["title"])}</h1>
       {guest}
       <div class="actions">
         <a class="btn" href="../首页.html">← 知识库首页</a>
-        <a class="btn" href="{URL}" target="_blank" rel="noopener">在B站打开</a>
-        <button type="button" class="btn btn-primary" id="copy-onenote">复制到 OneNote</button>
-        <span class="copy-status" id="copy-status" role="status" aria-live="polite">时间戳都能点，会跳到B站对应那句话</span>
+        <a class="btn btn-primary" href="#timeline">进入时间线精读</a>
+        <a class="btn" href="{URL}" target="_blank" rel="noopener" title="B站原视频：{BV}">在 B 站打开</a>
+        <button type="button" class="btn" id="copy-onenote">复制到 OneNote</button>
+        <button type="button" class="btn btn-theme" id="theme-toggle" aria-label="切换明暗主题">☾ 深色</button>
       </div>
+      <p class="copy-status" id="copy-status" role="status" aria-live="polite"></p>
       <div class="ruler">
-        <div class="ruler-head"><span>全片 <b>{ep["duration"]}</b> · 按章节，颜色表示推荐程度，点色块跳到对应章节 · <b id="read-count"></b></span><span class="keys">{keys}</span></div>
+        <div class="ruler-head"><span>全片 <b>{ep["duration"]}</b> · 点色块跳到对应章节 · <b id="read-count"></b></span><span class="keys">{keys}</span></div>
         <div class="bar">{ruler}</div>
         <div class="ticks">{ticks}</div>
       </div>
     </header>
     {body}
-    <footer class="note">基于{e(ep["source"])}整理，人名和术语已按上下文更正；时间戳已对准到原句开头。内容为嘉宾的个人观点，不构成投资建议。</footer>
+    <footer class="note">
+      <div class="note-end">
+        <span class="note-progress" id="footer-progress"></span>
+        <div class="note-links">
+          <a class="btn-ghost" href="../首页.html">← 返回知识库首页</a>
+          <button type="button" class="btn-ghost" id="back-top-foot">回到顶部 ↑</button>
+        </div>
+      </div>
+      <p>基于{e(ep["source"])}整理，人名和术语已按上下文更正；时间戳已对准到原句开头。内容为嘉宾的个人观点，不构成投资建议。</p>
+    </footer>
   </main>
 </div>
+<button type="button" class="fab-top" id="fab-top" aria-label="回到顶部" hidden>↑</button>
 <template id="onenote-src">{onenote}</template>
 <script>{js}</script>
+</body>
+</html>
 """
 open(os.path.join(ep_dir, "网页版.html"), "w", encoding="utf-8").write(page)
 print("网页版", len(page), "| OneNote版", len(onenote), "| 注释术语", len(used))
