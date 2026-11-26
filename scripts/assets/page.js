@@ -5,6 +5,26 @@
     set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
   };
 
+  // ---- theme toggle (sync with console localStorage) ----
+  const rootEl=document.documentElement;
+  const savedTheme=(()=>{try{return localStorage.getItem('bili-podcast-theme')||localStorage.getItem('theme')||'';}catch(e){return '';}})();
+  if(savedTheme==='dark'||savedTheme==='light') rootEl.dataset.theme=savedTheme;
+  const actionsBar=document.querySelector('.actions');
+  if(actionsBar){
+    const tbtn=document.createElement('button');
+    tbtn.type='button'; tbtn.className='btn btn-theme'; tbtn.setAttribute('aria-label','切换明暗主题');
+    const isDark=()=>rootEl.dataset.theme==='dark'||(!rootEl.dataset.theme&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const syncBtn=()=>{tbtn.textContent=isDark()?'☀ 浅色':'☾ 深色';};
+    tbtn.addEventListener('click',()=>{
+      const next=isDark()?'light':'dark';
+      rootEl.dataset.theme=next;
+      try{localStorage.setItem('bili-podcast-theme',next);localStorage.setItem('theme',next);}catch(e){}
+      syncBtn();
+    });
+    syncBtn();
+    actionsBar.appendChild(tbtn);
+  }
+
   // ---- table of contents highlight ----
   const tops=[...document.querySelectorAll('.toc > a[data-sec]')];
   const secs=[...document.querySelectorAll('section.sec')];
