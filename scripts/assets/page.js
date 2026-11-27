@@ -22,16 +22,30 @@
     syncBtn();
   }
 
-  // ---- table of contents highlight ----
+  // ---- table of contents highlight (deterministic scroll-spy) ----
   const tops=[...document.querySelectorAll('.toc > a[data-sec]')];
   const secs=[...document.querySelectorAll('section.sec')];
-  if('IntersectionObserver' in window){
-    const io=new IntersectionObserver(es=>{es.forEach(en=>{ if(en.isIntersecting){ const id=en.target.id;
-      tops.forEach(a=>{const on=a.dataset.sec===id; a.classList.toggle('on',on); on?a.setAttribute('aria-current','location'):a.removeAttribute('aria-current');});
-      const on=tops.find(a=>a.dataset.sec===id); if(on&&window.innerWidth<=960){ on.scrollIntoView({block:'nearest',inline:'center'}); }
-    }});},{rootMargin:'-25% 0px -65% 0px'});
-    secs.forEach(s=>io.observe(s));
+  let spyTicking=false;
+  function updateTocActive(){
+    spyTicking=false;
+    if(!secs.length) return;
+    let activeId=secs[0].id;
+    if(window.scrollY>=120){
+      for(const s of secs){
+        if(s.getBoundingClientRect().top<=140) activeId=s.id;
+        else break;
+      }
+    }
+    tops.forEach(a=>{
+      const on=a.dataset.sec===activeId;
+      a.classList.toggle('on',on);
+      on?a.setAttribute('aria-current','location'):a.removeAttribute('aria-current');
+    });
+    const onEl=tops.find(a=>a.dataset.sec===activeId);
+    if(onEl&&window.innerWidth<=960) onEl.scrollIntoView({block:'nearest',inline:'center'});
   }
+  window.addEventListener('scroll',()=>{if(!spyTicking){spyTicking=true; requestAnimationFrame(updateTocActive);}},{passive:true});
+  updateTocActive();
   document.querySelectorAll('a[href^="#ch-"]').forEach(a=>a.addEventListener('click',()=>{
     const d=document.querySelector(a.getAttribute('href'));
     if(!d) return;
